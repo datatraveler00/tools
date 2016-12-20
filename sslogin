@@ -1,0 +1,24 @@
+#!/bin/bash
+#登录dev、test、以及终端机
+opt="${1}"
+opt="|${opt}|"
+dir="$( cd "$( dirname "$0"  )" && pwd  )"
+info=`cat ${dir}/libs/sslogin/domain.conf|grep -v '#'|grep ${opt}|head -n 1`;
+
+if [ "$info" = '' ];then
+    echo '没有配置相关域名!!!!!'
+    exit 1;
+fi;
+servtype=`cut -d '|' -f 4 <<< ${info}`
+ipaddress=`cut -d '|' -f 3 <<< ${info}`
+passwd=`cut -d '|' -f 5 <<< ${info}`
+
+cd ${dir}
+
+if [ $servtype = 'testadmin' ];then
+    ssh -i /Users/wangyixiang/project/.id_rsa_wangyixiang wangyixiang@admin.xiaokaxiu.com;
+elif [ $servtype = 'dev' ];then
+    ./libs/sslogin/dev_server_login.sh $ipaddress $passwd
+elif [ $servtype = 'test' ];then
+    ./libs/sslogin/test_server_login.sh $ipaddress
+fi;

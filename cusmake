@@ -1,0 +1,19 @@
+#!/bin/bash
+#判断命令行参数,不符合条件则退出
+if (( $#<1 ))
+then
+    echo "Usage:make.sh buildconfig";
+    exit 1;
+fi
+path=$(pwd)
+dir=templates
+if [ -d ${path}/${dir} ];then
+    rm ${path}/${dir}
+fi
+
+sh $1'.sh' $2;
+
+if [ $? -eq 0 ];then
+#    ln -s ${path}/output/templates templates
+    ln -s ${path}/../tpl_yizhibo_com templates
+fi;
